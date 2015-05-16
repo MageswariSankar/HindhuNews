@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">HinduNews</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="entment_name">Entertainment</string>
+    <string name="business_name">Business</string>
+    <string name="news_name">News</string>
+    <string name="sports_name">Sports</string>
+    <string name="opinon_name">Opinon</string>
+
+    <string name="home_name">Home</string>
+
+</resources>

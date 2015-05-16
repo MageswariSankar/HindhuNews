@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/HNFeeds/HNFeeds.iml" filepath="$PROJECT_DIR$/HNFeeds/HNFeeds.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HinduNews.iml" filepath="$PROJECT_DIR$/HinduNews.iml" />
+    </modules>
+  </component>
+</project>
+

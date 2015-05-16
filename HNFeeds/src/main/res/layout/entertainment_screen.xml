@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <ListView
+        android:id="@+id/commonListView" android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:dividerHeight="0dp"
+        android:background="@color/white_color"
+        android:fillViewport="true"
+        android:padding="10dp">
+
+    </ListView>
+
+    <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+        android:id="@+id/progressBarCircularIndeterminate"
+        android:layout_width="32dp" android:layout_centerInParent="true"
+        android:layout_height="32dp"
+        android:background="#1E88E5" />
+
+
+</RelativeLayout>
