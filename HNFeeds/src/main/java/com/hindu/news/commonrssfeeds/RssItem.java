@@ -32,6 +32,16 @@ public class RssItem{
     String link;
     String imageUrl;
 
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    String time;
+
     public String getDescription() {
         return description;
     }

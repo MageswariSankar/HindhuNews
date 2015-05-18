@@ -8,14 +8,39 @@
 
     <ImageView
         android:id="@+id/imageDisplayView"
-        android:layout_width="50dp" android:layout_marginLeft="10dp"
-        android:layout_height="60dp"
-         />
+        android:layout_width="50dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="10dp" />
 
-    <TextView
-        android:id="@+id/titleTxtView"
+    <LinearLayout android:id="@+id/commonLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp" />
+        android:layout_height="200dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/titleTxtView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp" android:layout_marginTop="10dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/default_color"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/desTxtView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp" android:layout_marginTop="5dp"
+            android:textColor="@android:color/black"
+            android:textSize="13sp" />
+    </LinearLayout>
 
 </LinearLayout>

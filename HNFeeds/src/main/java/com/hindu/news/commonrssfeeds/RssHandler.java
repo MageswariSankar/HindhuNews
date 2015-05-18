@@ -1,6 +1,8 @@
 package com.hindu.news.commonrssfeeds;
 
 
+import android.text.Html;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -33,6 +35,7 @@ public class RssHandler extends DefaultHandler {
     private boolean parsingTitle;
     private boolean parsingLink;
     private boolean parsingDescription;
+    private boolean parsingImage;
 
     public RssHandler() {
         //Initializes a new ArrayList that will hold all the generated RSS items.
@@ -49,8 +52,10 @@ public class RssHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (qName.equals("item"))
             currentItem = new RssItem();
-        else if (qName.equals("title"))
+        else if (qName.equals("title")) {
             parsingTitle = true;
+            //currentItem.setTitle(attributes.getValue("title"));
+        }
         else if (qName.equals("link"))
             parsingLink = true;
         else if (qName.equals("description"))
@@ -81,14 +86,20 @@ public class RssHandler extends DefaultHandler {
     public void characters(char[] ch, int start, int length) throws SAXException {
         if (currentItem != null) {
             //If parsingTitle is true, then that means we are inside a <title> tag so the text is the title of an item.
-            if (parsingTitle)
+            if (parsingTitle) {
+                System.out.println("enter the title..."+new String(ch, start, length));
                 currentItem.setTitle(new String(ch, start, length));
+            }
                 //If parsingLink is true, then that means we are inside a <link> tag so the text is the link of an item.
             else if (parsingLink)
                 currentItem.setLink(new String(ch, start, length));
                 //If parsingDescription is true, then that means we are inside a <description> tag so the text is the description of an item.
-            else if (parsingDescription)
-                currentItem.setDescription(new String(ch, start, length));
+            else if (parsingDescription) {
+                String cdata = new String(ch, start, length);
+                System.out.println("enter the count..."+cdata);
+                String noHTMLString=Html.fromHtml(cdata).toString();
+                currentItem.setDescription(noHTMLString);
+            }
         }
     }
 }

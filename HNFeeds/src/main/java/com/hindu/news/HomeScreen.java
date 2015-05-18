@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.hindu.news.commonfragment.BusinessFragment;
 import com.hindu.news.commonfragment.EntertainmentFragment;
 import com.hindu.news.commonfragment.HomeFragment;
+import com.hindu.news.commonfragment.NewsFragment;
+import com.hindu.news.commonfragment.OpinonFragment;
 import com.hindu.news.commonfragment.SportsFragment;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
@@ -39,14 +41,16 @@ public class HomeScreen extends AppCompatActivity {
     {
        FragmentPagerItemAdapter fragmentPagerItemAdapter=new FragmentPagerItemAdapter(getSupportFragmentManager(),
                           FragmentPagerItems.with(this)
+                         .add(R.string.opinon_name, OpinonFragment.class)
                         .add(R.string.entment_name, EntertainmentFragment.class)
                         .add(R.string.business_name, BusinessFragment.class)
                         .add(R.string.home_name, HomeFragment.class)
-                        .add(R.string.news_name, BusinessFragment.class)
+                        .add(R.string.news_name, NewsFragment.class)
                         .add(R.string.sports_name, SportsFragment.class)
+
                         .create());
         viewPagerObj.setAdapter(fragmentPagerItemAdapter);
-        viewPagerObj.setCurrentItem(2);
+        viewPagerObj.setCurrentItem(3);
 
         smartTabLayoutObj.setViewPager(viewPagerObj);
     }

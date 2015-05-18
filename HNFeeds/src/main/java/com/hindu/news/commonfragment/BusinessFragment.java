@@ -1,5 +1,6 @@
 package com.hindu.news.commonfragment;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,11 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.hindu.news.R;
+import com.hindu.news.WebViewDisplay;
 import com.hindu.news.commonrssfeeds.RssItem;
 import com.hindu.news.commonrssfeeds.RssReader;
 import com.hindu.news.commonui.CommonAdapter;
@@ -43,7 +46,8 @@ public class BusinessFragment extends Fragment {
                 false);
         setUpView(view);
         setUpAdapter();
-        new BusinessRssFeed().execute("http://www.pcworld.com/index.rss");
+        //new BusinessRssFeed().execute("http://www.pcworld.com/index.rss");
+        new BusinessRssFeed().execute("http://theceweb.thehindu.co.in/business/?service=feeder");
 
         return view;
     }
@@ -59,7 +63,7 @@ public class BusinessFragment extends Fragment {
         businessCommonDataList = new ArrayList<CommonRowData>();
         businessCommonAdapter = new CommonAdapter(getActivity(), businessCommonDataList);
 
-        int[] viewIDs = { R.id.titleTxtView,R.id.imageDisplayView };
+        int[] viewIDs = { R.id.titleTxtView,R.id.imageDisplayView ,R.id.desTxtView,R.id.time,R.id.commonLayout};
         businessCommonAdapter.setLayoutTextViews(R.layout.listviewsingleitem, viewIDs);
         businessCommonAdapter.setPopulationListener(new PopulationListener() {
 
@@ -67,8 +71,24 @@ public class BusinessFragment extends Fragment {
             public void populateFrom(View v, int position,
                                      final CommonRowData list, final View[] views) {
 
+                ((TextView) views[2]).setText(list.getHead3());
                 ((TextView) views[0]).setText(list.getHead1());
-                Picasso.with(getActivity()).load(list.getHead2()).into((ImageView) views[1]);
+                ((TextView) views[3]).setText(list.getHead4());
+                if(list.getHead2()!=null && !list.getHead2().equals("")) {
+                    Picasso.with(getActivity()).load(list.getHead2()).into((ImageView) views[1]);
+                }
+                else
+                    ((ImageView) views[1]).setVisibility(View.GONE);
+
+                ((LinearLayout)views[4]).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent in=new Intent(getActivity(), WebViewDisplay.class);
+                        in.putExtra("WEBURL",list.getSubHead1());
+                        startActivity(in);
+                    }
+                });
+
 
             }
 
@@ -110,7 +130,10 @@ public class BusinessFragment extends Fragment {
                     String lefTitle = rssItem.getTitle();
 
                     businessCommonRowData.setHead1(lefTitle);
+                    businessCommonRowData.setHead3(rssItem.getDescription());
                     businessCommonRowData.setHead2(rssItem.getImageUrl());
+                    businessCommonRowData.setHead4(rssItem.getTime());
+                    businessCommonRowData.setSubHead1(rssItem.getLink());
 
                     businessCommonAdapter.add(businessCommonRowData);
                 }

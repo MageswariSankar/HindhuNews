@@ -7,7 +7,7 @@
     <LinearLayout
         android:id="@+id/leftLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="300dp"
         android:layout_margin="5dp"
         android:layout_weight="1"
         android:background="@drawable/bg_shape"
@@ -15,19 +15,22 @@
         android:paddingBottom="6dp"
         android:paddingTop="4dp">
 
-        <ImageView android:layout_marginRight="10dp"
+        <ImageView
             android:id="@+id/imageDisplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp" />
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
 
         <TextView
             android:id="@+id/shortTxtView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:textColor="@android:color/black"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
@@ -35,7 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:textColor="@android:color/black"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/default_color"
             android:textSize="12sp" />
 
         <TextView
@@ -43,6 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:textColor="@android:color/black"
             android:textSize="13sp" />
     </LinearLayout>
@@ -50,7 +55,7 @@
     <LinearLayout
         android:id="@+id/rightLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="300dp"
         android:layout_margin="5dp"
         android:layout_weight="1"
         android:background="@drawable/bg_shape"
@@ -62,15 +67,18 @@
             android:id="@+id/imageDisplaySec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp" />
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
 
         <TextView
             android:id="@+id/shortTxtViewSec"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:textColor="@android:color/black"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
@@ -78,7 +86,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:textColor="@android:color/black"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/default_color"
             android:textSize="12sp" />
 
         <TextView
@@ -86,6 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:textColor="@android:color/black"
             android:textSize="13sp" />
     </LinearLayout>

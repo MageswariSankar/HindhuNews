@@ -1,17 +1,27 @@
 package com.hindu.news.commonrssfeeds;
 
+import android.net.ParseException;
+import android.text.Html;
 import android.util.*;
 import android.util.Base64;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -38,60 +48,121 @@ public class RssReader {
     private String rssUrl;
 
     public RssReader(String url) {
+        //  try {
 
-        /* URLConnection uc = url.openConnection();
-        uc.setUseCaches(false);
-        String val = "testfeed:testfeed1";
-        byte[] base = val.getBytes();
-        String authorizationString = "Basic " + android.util.Base64.encodeToString(base, Base64.NO_WRAP);
-        uc.setRequestProperty ("Authorization", authorizationString);*/
+           /* URL connURL = new URL(url);
+            URLConnection uc = connURL.openConnection();
+            if(connURL.getUserInfo()!=null) {
+                uc.setUseCaches(false);
+                String val = "testfeed:testfeed1";
+                byte[] base = val.getBytes();
+                String authorizationString = "Basic " + android.util.Base64.encodeToString(base, Base64.NO_WRAP);
+                uc.setRequestProperty("Authorization", authorizationString);
+            }
+*/
         rssUrl = url;
+       /* } catch (MalformedURLException e) {
+            Log.v("Error Malformed Exception", e + "");
+        }catch (IOException e)
+        {
+            Log.v("Error IO Exception", e + "");
+        }*/
     }
 
     public List<RssItem> getItems() throws Exception {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        SAXParser saxParser = factory.newSAXParser();
-        //Creates a new RssHandler which will do all the parsing.
-        RssHandler handler = new RssHandler();
-        //Pass SaxParser the RssHandler that was created.
-        saxParser.parse(rssUrl, handler);
-        return handler.getRssItemList();
-    }
-
-   /* public static RssFeed read(URL url) throws SAXException, IOException {
-       *//* URLConnection uc = url.openConnection();
-        uc.setUseCaches(false);
-        String val = "testfeed:testfeed1";
-        byte[] base = val.getBytes();
-        String authorizationString = "Basic " + android.util.Base64.encodeToString(base, Base64.NO_WRAP);
-        uc.setRequestProperty ("Authorization", authorizationString);*//*
-        return read(url.openStream());
-
-    }
-
-    public static RssFeed read(InputStream stream) throws SAXException, IOException {
-
+        List<RssItem> postDataList = new ArrayList<RssItem>();
+        InputStream is = null;
         try {
-            System.out.println("News feed data..."+stream);
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser parser = factory.newSAXParser();
-            XMLReader reader = parser.getXMLReader();
-            RssHandler handler = new RssHandler();
-            InputSource input = new InputSource(stream);
+            URL url = new URL(rssUrl);
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
 
-            reader.setContentHandler(handler);
-            reader.parse(input);
+            String val = "testfeed:testfeed1";
+            byte[] base = val.getBytes();
+            String authorizationString = "Basic " + android.util.Base64.encodeToString(base, Base64.NO_WRAP);
+            connection.setRequestProperty("Authorization", authorizationString);
 
-            return handler.getResult();
+            connection.setReadTimeout(10 * 1000);
+            connection.setConnectTimeout(10 * 1000);
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            connection.connect();
+            int response = connection.getResponseCode();
+            Log.d("debug", "The response is: " + response);
+            is = connection.getInputStream();
 
-        } catch (ParserConfigurationException e) {
-        	e.printStackTrace();
-            throw new SAXException();
+            // parse xml after getting the data
+            XmlPullParserFactory factory = XmlPullParserFactory
+                    .newInstance();
+            factory.setNamespaceAware(true);
+            XmlPullParser xpp = factory.newPullParser();
+            xpp.setInput(is, null);
+            boolean insideItem = false;
+            int eventType = xpp.getEventType();
+            RssItem pdData = null;
+            SimpleDateFormat dateFormat = new SimpleDateFormat(
+                    "EEE, DD MMM yyyy HH:mm:ss");
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if (eventType == XmlPullParser.START_DOCUMENT) {
+
+                } else if (eventType == XmlPullParser.START_TAG) {
+                    System.out.println("get the thumb 1.." + xpp.getName() + " " + insideItem);
+                    if (xpp.getName().equalsIgnoreCase("item")) {
+                        insideItem = true;
+                        pdData = new RssItem();
+                    } else if (xpp.getName().equalsIgnoreCase("title")) {
+                        if (insideItem)
+                            pdData.setTitle(xpp.nextText()); //extract the headline
+                    }
+                    else if (xpp.getName().equalsIgnoreCase("pubDate")) {
+                        if (insideItem) {
+                            Date postDate = dateFormat.parse(xpp.nextText());
+                            String dateDisplay = dateFormat.format(postDate);
+                            pdData.setTime(dateDisplay); //extract the headline
+                        }
+                    }else if (xpp.getName().equalsIgnoreCase("description")) {
+                        if (insideItem) {
+
+                              String noHTMLString = Html.fromHtml(xpp.nextText()).toString();
+                              pdData.setDescription(noHTMLString);
+                        }//extract the headline
+                    } else if (xpp.getName().equals("thumbnail") || xpp.getName().equals("image")) {
+
+                        if (insideItem) {
+                            String thumbnailUrl = xpp.getAttributeValue(null, "url");
+                          //  System.out.println("get the thumb.." + thumbnailUrl);
+                            pdData.setImageUrl(thumbnailUrl);
+                        }
+                    }
+                        else if (xpp.getName().equalsIgnoreCase("link")) {
+                            if (insideItem)
+                                pdData.setLink(xpp.nextText()); //extract the link of article
+                        }
+                } else if (eventType == XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("item")) {
+                    postDataList.add(pdData);
+                    insideItem = false;
+                }
+
+                eventType = xpp.next(); //move to next element
+            }
+            Log.v("tst", String.valueOf((postDataList.size())));
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
 
+        return postDataList;
+        // return handler.getRssItemList();
     }
 
-    public static RssFeed read(String source) throws SAXException, IOException {
-        return read(new ByteArrayInputStream(source.getBytes()));
-    }*/
+
 }
