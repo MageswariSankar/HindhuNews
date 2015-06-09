@@ -18,55 +18,17 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-/*
- * Copyright (C) 2014 Shirwa Mohamed <shirwa99@gmail.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 public class RssReader {
 
     private String rssUrl;
 
     public RssReader(String url) {
-        //  try {
-
-           /* URL connURL = new URL(url);
-            URLConnection uc = connURL.openConnection();
-            if(connURL.getUserInfo()!=null) {
-                uc.setUseCaches(false);
-                String val = "testfeed:testfeed1";
-                byte[] base = val.getBytes();
-                String authorizationString = "Basic " + android.util.Base64.encodeToString(base, Base64.NO_WRAP);
-                uc.setRequestProperty("Authorization", authorizationString);
-            }
-*/
         rssUrl = url;
-       /* } catch (MalformedURLException e) {
-            Log.v("Error Malformed Exception", e + "");
-        }catch (IOException e)
-        {
-            Log.v("Error IO Exception", e + "");
-        }*/
     }
 
     public List<RssItem> getItems() throws Exception {
@@ -88,7 +50,6 @@ public class RssReader {
             connection.setDoInput(true);
             connection.connect();
             int response = connection.getResponseCode();
-            Log.d("debug", "The response is: " + response);
             is = connection.getInputStream();
 
             // parse xml after getting the data
@@ -103,9 +64,7 @@ public class RssReader {
             SimpleDateFormat dateFormat = new SimpleDateFormat(
                     "EEE, DD MMM yyyy HH:mm:ss");
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                if (eventType == XmlPullParser.START_DOCUMENT) {
-
-                } else if (eventType == XmlPullParser.START_TAG) {
+                if (eventType == XmlPullParser.START_TAG) {
                     System.out.println("get the thumb 1.." + xpp.getName() + " " + insideItem);
                     if (xpp.getName().equalsIgnoreCase("item")) {
                         insideItem = true;

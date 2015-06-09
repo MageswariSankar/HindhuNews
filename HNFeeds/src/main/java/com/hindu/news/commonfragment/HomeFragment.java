@@ -16,6 +16,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.hindu.news.HomeScreen;
 import com.hindu.news.R;
@@ -28,12 +37,16 @@ import com.hindu.news.commonui.PopulationListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.xml.transform.ErrorListener;
 
 /**
  * Created by Mageswari on 16-05-2015.
  */
-public class HomeFragment extends Fragment{
+public class HomeFragment extends Fragment {
     private CommonAdapter homeCommonAdapter;
     private List<CommonRowData> homeCommonDataList;
     private CommonRowData homeCommonRowData;
@@ -51,27 +64,25 @@ public class HomeFragment extends Fragment{
         setUpView(view);
         setUpAdapter();
 
-        // new HomeRssFeed().execute("http://www.pcworld.com/index.rss");
         new HomeRssFeed().execute("http://theceweb.thehindu.co.in/?service=feeder");
 
         return view;
     }
 
     private void setUpView(View view) {
-        homeCommonListView=(ListView)view.findViewById(R.id.commonListView);
-        progressBarVew=(ProgressBarCircularIndeterminate)view.findViewById(R.id.progressBarCircularIndeterminate);
+        homeCommonListView = (ListView) view.findViewById(R.id.commonListView);
+        progressBarVew = (ProgressBarCircularIndeterminate) view.findViewById(R.id.progressBarCircularIndeterminate);
 
     }
 
-    private void setUpAdapter()
-    {
+    private void setUpAdapter() {
 
         homeCommonDataList = new ArrayList<CommonRowData>();
         homeCommonAdapter = new CommonAdapter(getActivity(), homeCommonDataList);
 
-        int[] viewIDs = { R.id.imageDisplay, R.id.imageDisplaySec, R.id.shortTxtView,
-                R.id.shortTxtViewSec, R.id.des,R.id.desSec,R.id.time,
-                R.id.timeSec ,R.id.leftLayout,R.id.rightLayout};
+        int[] viewIDs = {R.id.imageDisplay, R.id.imageDisplaySec, R.id.shortTxtView,
+                R.id.shortTxtViewSec, R.id.des, R.id.desSec, R.id.time,
+                R.id.timeSec, R.id.leftLayout, R.id.rightLayout};
         homeCommonAdapter.setLayoutTextViews(R.layout.listviewdoubleitem, viewIDs);
         homeCommonAdapter.setPopulationListener(new PopulationListener() {
 
@@ -82,32 +93,31 @@ public class HomeFragment extends Fragment{
                 ((TextView) views[2]).setText(list.getHead1());
                 ((TextView) views[3]).setText(list.getHead2());
 
-                if(list.getHead3()!=null && !list.getHead3().equals(""))
-                Picasso.with(getActivity()).load(list.getHead3()).into((ImageView) views[0]);
+                if (list.getHead3() != null && !list.getHead3().equals(""))
+                    Picasso.with(getActivity()).load(list.getHead3()).into((ImageView) views[0]);
 
-                if(list.getHead4()!=null && !list.getHead4().equals(""))
-                Picasso.with(getActivity()).load(list.getHead4()).into((ImageView) views[1]);
+                if (list.getHead4() != null && !list.getHead4().equals(""))
+                    Picasso.with(getActivity()).load(list.getHead4()).into((ImageView) views[1]);
 
                 ((TextView) views[4]).setText(list.getSubHead1());
                 ((TextView) views[5]).setText(list.getSubHead2());
 
-                final String[] timeDes=list.getSubHead3().split("#");
+                final String[] timeDes = list.getSubHead3().split("#");
 
-                final String[] timeDesRight=list.getSubHead4().split("#");
+                final String[] timeDesRight = list.getSubHead4().split("#");
 
                 ((TextView) views[6]).setText(timeDes[0]);
                 ((TextView) views[7]).setText(timeDesRight[0]);
 
-                ((LinearLayout)views[8]).setOnClickListener(new View.OnClickListener() {
+                ((LinearLayout) views[8]).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent in=new Intent(getActivity(), WebViewDisplay.class);
-                        System.out.println("Click event..."+timeDes[1]);
-                        in.putExtra("WEBURL",timeDes[1]);
+                        Intent in = new Intent(getActivity(), WebViewDisplay.class);
+                        in.putExtra("WEBURL", timeDes[1]);
                         startActivity(in);
                     }
                 });
-                ((LinearLayout)views[9]).setOnClickListener(new View.OnClickListener() {
+                ((LinearLayout) views[9]).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent in = new Intent(getActivity(), WebViewDisplay.class);
@@ -129,8 +139,7 @@ public class HomeFragment extends Fragment{
 
     }
 
-
-    private class HomeRssFeed extends AsyncTask<String, Void, Void> {
+   private class HomeRssFeed extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
 
